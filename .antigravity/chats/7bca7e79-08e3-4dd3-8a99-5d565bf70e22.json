@@ -3,7 +3,7 @@
   "name": "بتعرف تعمل برامج",
   "createdAt": "2026-11-21T03:20:01.224Z",
   "filename": "7bca7e79-08e3-4dd3-8a99-5d565bf70e22.json",
-  "geminiStarted": false,
+  "geminiStarted": true,
   "messages": [
     {
       "id": "cee8fedf-78ad-4574-8bda-f6789acc1fae",
@@ -15,6 +15,18 @@
       "parent_message_id": null,
       "created_at": "2026-11-21T03:20:37.869Z",
       "sender": "ios",
+      "is_cancelled": false
+    },
+    {
+      "id": "f4a106ce-d1af-40ff-954c-84974b9b383c",
+      "role": "agent",
+      "content": "نعم، بالتأكيد! أستطيع مساعدتك في تصميم وتطوير مختلف أنواع البرامج والتطبيقات من الصفر، بما في ذلك:\n\n* **مواقع وتطبيقات الويب** (الواجهات الأمامية والخلفية مثل React، Vue، Node.js، Python، وغيرها).\n* **برمجيات وأدوات الأتمتة والسكربتات** (باستخدام Python، Bash، وغيرها).\n* **واجهات برمجة التطبيقات (APIs)** وقواعد البيانات.\n* **إصلاح الأخطاء البرمجية (Debugging)** وتطوير أو تعديل المشاريع القائمة.\n\nما هي فكرة البرنامج أو المشروع الذي ترغب في بنائه؟ سأكون سعيداً بالبدء معك خطوة بخطوة!",
+      "status": "completed",
+      "model": "gemini-3.8-flash-high",
+      "client_type": "gemini-bridge",
+      "parent_message_id": "cee8fedf-78ad-4574-8bda-f6789acc1fae",
+      "created_at": "2026-11-21T03:20:46.997Z",
+      "sender": "macOS",
       "is_cancelled": false
     }
   ]
