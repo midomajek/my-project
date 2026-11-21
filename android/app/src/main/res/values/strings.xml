@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Multi-Point Auto Clicker</string>
+    <string name="accessibility_service_label">Multi-Point Auto Clicker Service</string>
+    <string name="accessibility_service_description">يقوم هذا التطبيق بمحاكاة ضغطات اللمس المتزامنة على النقاط التي يحددها المستخدم على الشاشة.</string>
+</resources>
