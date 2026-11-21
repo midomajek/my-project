@@ -4,5 +4,18 @@
   "createdAt": "2026-11-21T03:20:01.224Z",
   "filename": "7bca7e79-08e3-4dd3-8a99-5d565bf70e22.json",
   "geminiStarted": false,
-  "messages": []
+  "messages": [
+    {
+      "id": "cee8fedf-78ad-4574-8bda-f6789acc1fae",
+      "role": "user",
+      "content": "بتعرف تعمل برامج",
+      "status": "pending",
+      "model": "gemini-3.8-flash-high",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-11-21T03:20:37.869Z",
+      "sender": "ios",
+      "is_cancelled": false
+    }
+  ]
 }
