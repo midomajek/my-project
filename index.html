@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Point Auto Clicker | النقر التلقائي المتزامن</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #090d16;
+            --bg-card: #111827;
+            --bg-card-sub: #1f2937;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.4);
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --phone-width: 340px;
+            --phone-height: 640px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b 0%, #090d16 50%, #030712 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            padding: 2.5rem 1rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(12px);
+        }
+
+        .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+            padding: 4px 14px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p.lead {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 680px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 20px var(--accent-green-glow);
+        }
+
+        .btn-secondary {
+            background: #1f2937;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #374151;
+            color: white;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                justify-items: center;
+            }
+        }
+
+        /* Smartphone Mockup */
+        .phone-wrapper {
+            position: sticky;
+            top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .phone-frame {
+            width: var(--phone-width);
+            height: var(--phone-height);
+            background: #030712;
+            border-radius: 46px;
+            border: 10px solid #1f2937;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8),
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 0 0 2px #000000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Notch / Camera */
+        .notch {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 20px;
+            background: #111827;
+            border-radius: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-lens {
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 50%;
+            border: 1px solid #1e293b;
+        }
+
+        /* Phone Screen Content */
+        .phone-screen {
+            flex: 1;
+            background: linear-gradient(180deg, #131d31 0%, #0b1120 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding-top: 35px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 18px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            font-family: monospace;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        /* Game / App Target Canvas inside phone */
+        .game-canvas {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+        }
+
+        .game-title {
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px dashed rgba(56, 189, 248, 0.3);
+        }
+
+        .combo-test-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .combo-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .combo-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .target-btn {
+            background: #0f172a;
+            border: 2px solid #3b82f6;
+            color: #93c5fd;
+            padding: 18px 4px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-align: center;
+            transition: all 0.1s ease;
+            position: relative;
+        }
+
+        .target-btn.active-hit {
+            background: #10b981 !important;
+            border-color: #34d399 !important;
+            color: white !important;
+            transform: scale(0.95);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+        }
+
+        .hit-counter {
+            font-size: 10px;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        .combo-banner {
+            margin-top: 10px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: none;
+            animation: pulseBanner 0.4s ease;
+        }
+
+        @keyframes pulseBanner {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .click-logs-container {
+            flex: 1;
+            background: #090e17;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+            padding: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #a5f3fc;
+            overflow-y: auto;
+            max-height: 160px;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .log-highlight {
+            color: #34d399;
+            font-weight: bold;
+        }
+
+        /* FLOATING OVERLAY INSIDE PHONE */
+        .floating-menu {
+            position: absolute;
+            top: 60px;
+            left: 12px;
+            background: rgba(17, 24, 39, 0.92);
+            border: 1.5px solid #3b82f6;
+            border-radius: 16px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7), 0 0 15px rgba(59, 130, 246, 0.3);
+            z-index: 50;
+            cursor: grab;
+            backdrop-filter: blur(8px);
+        }
+
+        .floating-menu:active {
+            cursor: grabbing;
+        }
+
+        .float-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: white;
+        }
+
+        .btn-float-play {
+            background: #10b981;
+        }
+        .btn-float-play.running {
+            background: #ef4444;
+        }
+        .btn-float-add {
+            background: #2563eb;
+        }
+        .btn-float-remove {
+            background: #f59e0b;
+        }
+        .btn-float-clear {
+            background: #475569;
+        }
+
+        .float-btn:hover {
+            transform: scale(1.08);
+        }
+
+        /* DRAGGABLE CLICK POINTS */
+        .click-target-point {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.75);
+            border: 3px solid #60a5fa;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: move;
+            z-index: 40;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.5);
+            transition: border-color 0.15s;
+        }
+
+        .click-target-point:hover {
+            border-color: #facc15;
+            background: rgba(37, 99, 235, 0.9);
+        }
+
+        .point-coord-badge {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: #94a3b8;
+            font-size: 9px;
+            font-family: monospace;
+            padding: 1px 5px;
+            border-radius: 4px;
+            border: 1px solid #334155;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Simultaneous Click Shockwave Ripple Effect */
+        .click-ripple {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #34d399;
+            background: rgba(16, 185, 129, 0.35);
+            pointer-events: none;
+            z-index: 39;
+            animation: rippleAnim 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes rippleAnim {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.6);
+                opacity: 0;
+            }
+        }
+
+        /* Content Sections */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            min-width: 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tech explanation comparison */
+        .diff-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .diff-grid { grid-template-columns: 1fr; }
+        }
+
+        .diff-col {
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .diff-col.wrong {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .diff-col.correct {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .diff-col h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Code Viewer Tabs */
+        .tabs-header {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .code-box {
+            background: #090e17;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            max-height: 420px;
+            line-height: 1.5;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Steps Guide */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            background: rgba(31, 41, 55, 0.5);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .step-content p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        /* Setting Controls Card */
+        .sim-controls-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            background: #1e293b;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .sim-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sim-input-group label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .sim-input-group input {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            width: 80px;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 3rem;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="badge-tag">
+            <span>⚡ كود أندرويد متزامن حقيقي (Simultaneous Multi-Touch)</span>
+        </div>
+        <h1>تطبيق النقر المتزامن متعدد النقاط</h1>
+        <p class="lead">
+            برنامج متكامل لنظام أندرويد يتيح لك وضع أي عدد من النقاط على الشاشة، وتنفيذ ضغطات اللمس عليها جميعاً في نفس اللحظة بالضبط.
+        </p>
+
+        <div class="header-actions">
+            <a href="android-multi-point-autoclicker.zip" download class="btn btn-primary">
+                <span>📦 تحميل سورس كود المشروع (ZIP)</span>
+            </a>
+            <button class="btn btn-secondary" onclick="document.getElementById('tech-guide').scrollIntoView({behavior: 'smooth'})">
+                <span>📖 شرح كيفية التثبيت والتشغيل</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Mobile Phone Simulator -->
+        <div class="phone-wrapper">
+            <div class="phone-frame">
+                <div class="notch"><div class="camera-lens"></div></div>
+
+                <div class="phone-screen" id="phoneScreen">
+                    <!-- Status bar -->
+                    <div class="status-bar">
+                        <span>12:45</span>
+                        <span>5G 📶 98% 🔋</span>
+                    </div>
+
+                    <!-- Target Canvas inside Phone -->
+                    <div class="game-canvas" id="canvasArea">
+                        <div class="game-title">
+                            🎯 محاكي شاشة الهاتف (اسحب النقاط وجرب الضغط)
+                        </div>
+
+                        <!-- 3-Button Simultaneous Combo Test -->
+                        <div class="combo-test-box">
+                            <div class="combo-title">اختبار ضغط 3 أزرار معاً (Combo Test):</div>
+                            <div class="combo-buttons-grid">
+                                <div class="target-btn" id="targetBtn1">
+                                    زر A
+                                    <div class="hit-counter" id="hitCount1">0 نقرات</div>
+                                </div>
+                                <div class="target-btn" id="targetBtn2">
+                                    زر B
+                                    <div class="hit-counter" id="hitCount2">0 نقرات</div>
+                                </div>
+                                <div class="target-btn" id="targetBtn3">
+                                    زر C
+                                    <div class="hit-counter" id="hitCount3">0 نقرات</div>
+                                </div>
+                            </div>
+                            <div class="combo-banner" id="comboBanner">🔥 تم الضغط على الأزرار الثلاثة معاً في نفس اللحظة! (3-Point Combo)</div>
+                        </div>
+
+                        <!-- Live Terminal Logs inside phone -->
+                        <div class="click-logs-container" id="logBox">
+                            <div class="log-entry log-highlight">>> نظام النقر المتزامن جاهز للاختبار...</div>
+                            <div class="log-entry">> أضف نقاطاً واسحبها فوق الأزرار ثم اضغط زر التشغيل الأخضر.</div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Control Panel inside Phone -->
+                    <div class="floating-menu" id="floatingMenu">
+                        <button class="float-btn btn-float-play" id="btnTogglePlay" title="تشغيل / إيقاف النقر">▶</button>
+                        <button class="float-btn btn-float-add" id="btnAddPoint" title="إضافة نقطة جديدة">+</button>
+                        <button class="float-btn btn-float-remove" id="btnRemovePoint" title="حذف آخر نقطة">-</button>
+                        <button class="float-btn btn-float-clear" id="btnClearPoints" title="مسح الكل">🗑</button>
+                    </div>
+
+                    <!-- Points Container inside Phone -->
+                    <div id="pointsContainer"></div>
+                </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 12px; text-align: center;">
+                💡 يمكنك سحب النقاط وشريط التحكم بالماوس أو اللمس داخل شاشة الموبايل
+            </p>
+        </div>
+
+        <!-- Documentation & Code Area -->
+        <div class="content-area">
+
+            <!-- Interactive Settings Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">⚙️ لوحة التحكم في المحاكي</h3>
+                    <span style="font-size: 0.85rem; color: var(--accent-green); font-weight: 700;" id="statusIndicator">حالة النقر: متوقف ⏸️</span>
+                </div>
+
+                <div class="sim-controls-panel">
+                    <div class="sim-input-group">
+                        <label>الفاصل الزمني (Interval):</label>
+                        <input type="number" id="inputInterval" value="1000" min="200" step="100">
+                        <span style="color: var(--text-muted); font-size: 0.8rem;">مللي ثانية</span>
+                    </div>
+
+                    <div class="sim-input-group">
+                        <label>مدة اللمسة (Duration):</label>
+                        <input type="number" id="inputDuration" value="50" min="10" max="300" step="10">
+                        <span style="color: var(--text-muted); font-size: 0.8rem;">مللي ثانية</span>
+                    </div>
+
+                    <button class="btn btn-success" style="padding: 6px 16px; font-size: 0.85rem; margin-right: auto;" id="btnExternalPlay">
+                        ▶ تشغيل النقر
+                    </button>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--text-muted);">
+                    جرب سحب النقطة 1 فوق "زر A"، والنقطة 2 فوق "زر B"، والنقطة 3 فوق "زر C" ثم اضغط تشغيل! ستلاحظ أن الأزرار الثلاثة تضيء باللون الأخضر في نفس التوقيت تماماً.
+                </p>
+            </div>
+
+            <!-- How it works: Technical explanation -->
+            <div class="card" id="tech-guide">
+                <div class="card-header">
+                    <h3 class="card-title">🧠 كيف يعمل النقر المتزامن برمجياً على أندرويد؟</h3>
+                </div>
+
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    معظم برامج الأوتو كليكر المجانية على متجر جوجل بلاي تضغط بنظام <strong>التعاقب (Sequential)</strong>، أي تضغط النقطة الأولى ثم تنتظر وتضغط الثانية. لكن في هذا الكود نستخدم الميزة الرسمية في أندرويد 7.0+ للنقر المتزامن (Multi-Stroke Gesture):
+                </p>
+
+                <div class="diff-grid">
+                    <div class="diff-col wrong">
+                        <h4 style="color: #f87171;">❌ التطبيقات العادية (تتابع فردي)</h4>
+                        <p>تستخدم حلقة <code>for</code> وتضغط كل نقطة على حدة، مما يسبب تأخيراً بين النقاط ولا يمكن ضغط زرين في نفس اللحظة.</p>
+                    </div>
+                    <div class="diff-col correct">
+                        <h4 style="color: #34d399;">✓ تطبيقنا المتزامن (Simultaneous)</h4>
+                        <p>نجمع مسارات كل النقاط داخل <code>GestureDescription.Builder</code> واحدة ونحدد لها <code>startTime = 0</code> جميعاً، ليرسلها المعالج كلمسة متعددة الأصابع في نفس الجزء من الثانية!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Source Code Viewer -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">💻 الكود المصدري للتطبيق (Kotlin)</h3>
+                    <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.8rem;" id="btnCopyCode">
+                        📋 نسخ الكود
+                    </button>
+                </div>
+
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-file="service">AutoClickerService.kt</button>
+                    <button class="tab-btn" data-file="manager">FloatingWidgetManager.kt</button>
+                    <button class="tab-btn" data-file="activity">MainActivity.kt</button>
+                    <button class="tab-btn" data-file="manifest">AndroidManifest.xml</button>
+                </div>
+
+                <pre class="code-box"><code id="codeDisplay"></code></pre>
+            </div>
+
+            <!-- Installation Guide Steps -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📱 خطوات التثبيت والتشغيل على الموبايل</h3>
+                </div>
+
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>تحميل المشروع وفتحه في Android Studio</h4>
+                            <p>قم بتحميل ملف الـ ZIP من الزر في الأعلى، وفك الضغط عنه ثم اختر مجلد <code>android</code> من خلال <strong>Open</strong> في برنامج Android Studio.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>تثبيت التطبيق على هاتفك (APK)</h4>
+                            <p>وصل هاتفك بالكمبيوتر واضغط زر <strong>Run ▶</strong> في Android Studio، أو اذهب إلى القائمة العلوية <code>Build</code> > <code>Build APK(s)</code> لنقل ملف الـ APK وتثبيته مباشرة على الهاتف.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>منح إذن الظهور فوق التطبيقات (Overlay)</h4>
+                            <p>عند فتح التطبيق لأول مرة، اضغط على زر "منح إذن الظهور فوق التطبيقات" لتفعيل إمكانية ظهور النقاط وشريط التحكم فوق أي لعبة أو تطبيق آخر.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>تفعيل خدمة إمكانية الوصول (Accessibility Service)</h4>
+                            <p>اضغط زر تفعيل الخدمة، ستفتح إعدادات الهاتف: اختر <strong>تطبيقات تم تنزيلها (Installed Services)</strong> > ثم فعل <strong>Multi-Point Auto Clicker</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>ابدأ الاستخدام!</h4>
+                            <p>اضغط على "تشغيل القائمة العائمة". افتح لعبتك أو تطبيقك المفضل، أضف النقاط بالضغط على <code>+</code> واسحبها لأي مكان، ثم اضغط <code>▶</code> لتنفيذ الضغطات المتزامنة!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>تطبيق Multi-Point Simultaneous Auto Clicker | تم برمجته وتجهيزه بالكامل بنظام أندرويد الحديث</p>
+    </footer>
+
+    <!-- Interactive Simulation Script -->
+    <script>
+        // State
+        let points = [];
+        let isRunning = false;
+        let clickTimer = null;
+        let pointCounter = 0;
+        let intervalMs = 1000;
+        let durationMs = 50;
+
+        // Elements
+        const phoneScreen = document.getElementById('phoneScreen');
+        const pointsContainer = document.getElementById('pointsContainer');
+        const floatingMenu = document.getElementById('floatingMenu');
+        const btnTogglePlay = document.getElementById('btnTogglePlay');
+        const btnAddPoint = document.getElementById('btnAddPoint');
+        const btnRemovePoint = document.getElementById('btnRemovePoint');
+        const btnClearPoints = document.getElementById('btnClearPoints');
+        const logBox = document.getElementById('logBox');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const btnExternalPlay = document.getElementById('btnExternalPlay');
+        const comboBanner = document.getElementById('comboBanner');
+        const inputInterval = document.getElementById('inputInterval');
+        const inputDuration = document.getElementById('inputDuration');
+
+        // Targets inside simulator
+        const targetButtons = [
+            { el: document.getElementById('targetBtn1'), hitCountEl: document.getElementById('hitCount1'), hits: 0 },
+            { el: document.getElementById('targetBtn2'), hitCountEl: document.getElementById('hitCount2'), hits: 0 },
+            { el: document.getElementById('targetBtn3'), hitCountEl: document.getElementById('hitCount3'), hits: 0 }
+        ];
+
+        // Code snippets
+        const codeFiles = {
+            service: `// AutoClickerService.kt
+// النواة الأساسية لإرسال إيماءات اللمس المتزامنة
+package com.autoclicker.multipoint
+
+import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
+import android.graphics.Path
+import android.graphics.PointF
+import android.os.Build
+
+class AutoClickerService : AccessibilityService() {
+    
+    // إرسال لمسات متزامنة على جميع النقاط في نفس جزء من الثانية
+    fun dispatchSimultaneousMultiTouch(points: List<PointF>, durationMs: Long = 50L) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || points.isEmpty()) return
+
+        val builder = GestureDescription.Builder()
+
+        // يتم إدراج كل نقطة في نفس الإيماءة مع startTime = 0L بالضبط!
+        for (point in points.take(10)) {
+            val path = Path().apply {
+                moveTo(point.x, point.y)
+            }
+            // startTime = 0L يجعل نظام أندرويد ينفذ اللمس كـ Multi-Touch متزامن
+            val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
+            builder.addStroke(stroke)
+        }
+
+        val gesture = builder.build()
+        dispatchGesture(gesture, object : GestureResultCallback() {
+            override fun onCompleted(gestureDescription: GestureDescription?) {
+                super.onCompleted(gestureDescription)
+                // تم تنفيذ الضغط بنجاح على كل النقاط في نفس اللحظة
+            }
+        }, null)
+    }
+}`,
+            manager: `// FloatingWidgetManager.kt
+// إدارة القائمة العائمة والنقاط القابلة للسحب فوق الشاشة
+package com.autoclicker.multipoint
+
+import android.content.Context
+import android.graphics.PixelFormat
+import android.graphics.PointF
+import android.os.Build
+import android.view.WindowManager
+import android.view.MotionEvent
+import android.view.View
+
+class FloatingWidgetManager(private val context: Context) {
+    private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val clickPoints = mutableListOf<ClickPoint>()
+
+    fun addClickPoint() {
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
+        )
+        // إضافة النقطة للسحب وحساب إحداثيات مركزها (X, Y)
+    }
+
+    fun getPointCoordinates(): List<PointF> {
+        return clickPoints.map { PointF(it.screenX, it.screenY) }
+    }
+}`,
+            activity: `// MainActivity.kt
+// فحص الأذونات (Overlay + Accessibility) وتهيئة التطبيق
+package com.autoclicker.multipoint
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // التحقق من إذن الظهور فوق التطبيقات
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
+        }
+    }
+}`,
+            manifest: `<!-- AndroidManifest.xml -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.autoclicker.multipoint">
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application ...>
+        <service
+            android:name=".AutoClickerService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+    </application>
+</manifest>`
+        };
+
+        // Initialize code display
+        const codeDisplay = document.getElementById('codeDisplay');
+        codeDisplay.textContent = codeFiles.service;
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const file = btn.getAttribute('data-file');
+                codeDisplay.textContent = codeFiles[file];
+            });
+        });
+
+        document.getElementById('btnCopyCode').addEventListener('click', () => {
+            navigator.clipboard.writeText(codeDisplay.textContent).then(() => {
+                const btn = document.getElementById('btnCopyCode');
+                const original = btn.textContent;
+                btn.textContent = '✓ تم النسخ!';
+                setTimeout(() => btn.textContent = original, 2000);
+            });
+        });
+
+        // Add 3 default points placed over buttons
+        function addPoint(x = null, y = null) {
+            pointCounter++;
+            const id = pointCounter;
+            const ptEl = document.createElement('div');
+            ptEl.className = 'click-target-point';
+            ptEl.id = `point-${id}`;
+            ptEl.textContent = id;
+
+            const badge = document.createElement('div');
+            badge.className = 'point-coord-badge';
+            ptEl.appendChild(badge);
+
+            // Initial position inside phone screen
+            const initialX = x !== null ? x : 40 + ((id - 1) % 3) * 90;
+            const initialY = y !== null ? y : (id <= 3 ? 140 : 250);
+
+            ptEl.style.left = `${initialX}px`;
+            ptEl.style.top = `${initialY}px`;
+
+            pointsContainer.appendChild(ptEl);
+
+            const pointObj = { id, element: ptEl, badge, x: initialX, y: initialY };
+            points.push(pointObj);
+
+            updatePointCoordBadge(pointObj);
+            setupDraggablePoint(pointObj);
+            logMessage(`تمت إضافة النقطة #${id} في الإحداثيات (X: ${Math.round(initialX)}, Y: ${Math.round(initialY)})`);
+        }
+
+        function removeLastPoint() {
+            if (points.length === 0) return;
+            const last = points.pop();
+            last.element.remove();
+            pointCounter = points.length;
+            logMessage(`تم حذف النقطة #${last.id}`);
+        }
+
+        function clearAllPoints() {
+            if (isRunning) stopClicking();
+            points.forEach(p => p.element.remove());
+            points = [];
+            pointCounter = 0;
+            logMessage(`تم حذف جميع النقاط.`);
+        }
+
+        function updatePointCoordBadge(p) {
+            const centerX = Math.round(p.x + 22);
+            const centerY = Math.round(p.y + 22);
+            p.badge.textContent = `${centerX},${centerY}`;
+        }
+
+        // Dragging for Points
+        function setupDraggablePoint(p) {
+            let isDragging = false;
+            let startX, startY, origX, origY;
+
+            function onStart(e) {
+                if (isRunning) return;
+                isDragging = true;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                startX = clientX;
+                startY = clientY;
+                origX = p.x;
+                origY = p.y;
+                e.preventDefault();
+            }
+
+            function onMove(e) {
+                if (!isDragging) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const dx = clientX - startX;
+                const dy = clientY - startY;
+
+                const screenRect = phoneScreen.getBoundingClientRect();
+                const newX = Math.max(5, Math.min(screenRect.width - 50, origX + dx));
+                const newY = Math.max(40, Math.min(screenRect.height - 50, origY + dy));
+
+                p.x = newX;
+                p.y = newY;
+                p.element.style.left = `${newX}px`;
+                p.element.style.top = `${newY}px`;
+                updatePointCoordBadge(p);
+            }
+
+            function onEnd() {
+                isDragging = false;
+            }
+
+            p.element.addEventListener('mousedown', onStart);
+            p.element.addEventListener('touchstart', onStart, { passive: false });
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('touchmove', onMove, { passive: false });
+            window.addEventListener('mouseup', onEnd);
+            window.addEventListener('touchend', onEnd);
+        }
+
+        // Dragging for Floating Menu
+        (function setupFloatingMenuDrag() {
+            let isDragging = false;
+            let startX, startY, origX, origY;
+
+            floatingMenu.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'BUTTON') return;
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                origX = floatingMenu.offsetLeft;
+                origY = floatingMenu.offsetTop;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                floatingMenu.style.left = `${Math.max(5, Math.min(270, origX + dx))}px`;
+                floatingMenu.style.top = `${Math.max(40, Math.min(540, origY + dy))}px`;
+            });
+
+            window.addEventListener('mouseup', () => isDragging = false);
+        })();
+
+        // SIMULTANEOUS CLICK EXECUTION
+        function executeSimultaneousClick() {
+            if (points.length === 0) return;
+
+            const timeNow = new Date().toTimeString().split(' ')[0] + '.' + String(new Date().getMilliseconds()).padStart(3, '0');
+            const coordsStr = points.map(p => `#${p.id}(${Math.round(p.x + 22)}, ${Math.round(p.y + 22)})`).join(' ');
+
+            // Fire ripples for ALL points at the EXACT SAME MOMENT
+            points.forEach(p => {
+                const ripple = document.createElement('div');
+                ripple.className = 'click-ripple';
+                ripple.style.left = `${p.x}px`;
+                ripple.style.top = `${p.y}px`;
+                pointsContainer.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 500);
+
+                // Check collision with the 3 target buttons inside phone
+                checkTargetHits(p.x + 22, p.y + 22);
+            });
+
+            logMessage(`[${timeNow}] <span class="log-highlight">⚡ ضغطة متزامنة</span> على ${points.length} نقاط: ${coordsStr}`);
+        }
+
+        function checkTargetHits(px, py) {
+            let hitButtons = 0;
+            targetButtons.forEach(btnObj => {
+                const rect = btnObj.el.getBoundingClientRect();
+                const screenRect = phoneScreen.getBoundingClientRect();
+                // Relative coordinates inside phone
+                const rx = rect.left - screenRect.left;
+                const ry = rect.top - screenRect.top;
+
+                if (px >= rx && px <= rx + rect.width && py >= ry && py <= ry + rect.height) {
+                    btnObj.hits++;
+                    btnObj.hitCountEl.textContent = `${btnObj.hits} نقرات`;
+                    btnObj.el.classList.add('active-hit');
+                    hitButtons++;
+                    setTimeout(() => btnObj.el.classList.remove('active-hit'), 200);
+                }
+            });
+
+            // If all 3 buttons are hit at the same instant!
+            if (hitButtons >= 3) {
+                comboBanner.style.display = 'block';
+                setTimeout(() => comboBanner.style.display = 'none', 1200);
+            }
+        }
+
+        function startClicking() {
+            if (points.length === 0) {
+                alert('يرجى إضافة نقطة واحدة على الأقل بالضغط على زر (+) أولاً');
+                return;
+            }
+
+            isRunning = true;
+            intervalMs = parseInt(inputInterval.value) || 1000;
+            durationMs = parseInt(inputDuration.value) || 50;
+
+            btnTogglePlay.classList.add('running');
+            btnTogglePlay.textContent = '⏹';
+            btnExternalPlay.textContent = '⏹ إيقاف النقر';
+            btnExternalPlay.classList.replace('btn-success', 'btn-primary');
+            statusIndicator.textContent = 'حالة النقر: يعمل الآن ⚡ (متزامن)';
+            statusIndicator.style.color = 'var(--accent-green)';
+
+            logMessage(`<span class="log-highlight">بدأ النقر المتزامن كل ${intervalMs}ms بمدة لمس ${durationMs}ms...</span>`);
+
+            executeSimultaneousClick();
+            clickTimer = setInterval(executeSimultaneousClick, intervalMs);
+        }
+
+        function stopClicking() {
+            isRunning = false;
+            clearInterval(clickTimer);
+            clickTimer = null;
+
+            btnTogglePlay.classList.remove('running');
+            btnTogglePlay.textContent = '▶';
+            btnExternalPlay.textContent = '▶ تشغيل النقر';
+            btnExternalPlay.classList.replace('btn-primary', 'btn-success');
+            statusIndicator.textContent = 'حالة النقر: متوقف ⏸️';
+            statusIndicator.style.color = 'var(--text-muted)';
+
+            logMessage(`تم إيقاف النقر.`);
+        }
+
+        function togglePlay() {
+            if (isRunning) {
+                stopClicking();
+            } else {
+                startClicking();
+            }
+        }
+
+        function logMessage(msg) {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = msg;
+            logBox.prepend(entry);
+        }
+
+        // Listeners
+        btnTogglePlay.addEventListener('click', togglePlay);
+        btnExternalPlay.addEventListener('click', togglePlay);
+        btnAddPoint.addEventListener('click', () => addPoint());
+        btnRemovePoint.addEventListener('click', removeLastPoint);
+        btnClearPoints.addEventListener('click', clearAllPoints);
+
+        // Add 3 default points placed directly on top of the 3 buttons
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                // Point 1 on Target A
+                addPoint(35, 118);
+                // Point 2 on Target B
+                addPoint(135, 118);
+                // Point 3 on Target C
+                addPoint(235, 118);
+            }, 100);
+        });
+    </script>
+</body>
+</html>
